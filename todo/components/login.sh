@@ -1,46 +1,31 @@
 #!/bin/bash
 
 source components/common.sh
+OS_PREREQ
 
-HEAD "Set Hostname and Update Repo"
-REPEAT
+Head "Install Go Lang"
+apt  install golang-go -y &>>$LOG
 STAT $?
 
-HEAD "Install Go Lang"
-wget -c https://dl.google.com/go/go1.15.5.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local
+DOWNLOAD_COMPONENT
 STAT $?
 
-HEAD "Set path variables"
-export PATH=$PATH:/usr/local/go/bin
-source ~/.profile
-go version
+Head "Export go path in directory"
+go get github.com/dgrijalva/jwt-go
+go get github.com/labstack/echo
+go get github.com/labstack/echo/middleware
+go get github.com/labstack/gommon/log
+go get github.com/openzipkin/zipkin-go
+go get github.com/openzipkin/zipkin-go/middleware/http
+go get  github.com/openzipkin/zipkin-go/reporter/http
+
+Head "Build"
+go build &>>"${LOG}"
 STAT $?
 
-HEAD "Make directory"
-mkdir ~/go
-cd ~/go
-mkdir src
-cd src
-STAT $?
+Head "Create login service file"
+mv /root/todoshell/login/systemd.service /etc/systemd/system/login.service
 
-HEAD "Clone code"
-git clone "https://github.com/srikavyapendiala/login.git" &>>${LOG}
-STAT $?
-
-HEAD "Export go path in directory"
-export GOPATH=~/go
-depmod && apt install go-dep &>>$LOG
-cd login
-dep ensure && go get &>>$LOG && go build &>>$LOG
-Stat $?
-
-HEAD "Create login service file"
-mv /root/go/src/login/systemd.service /etc/systemd/system/login.service
-
-HEAD "Replace Ip with DNS Names"
-sed -i -e 's/Environment=USERS_API_ADDRESS=http://172.31.17.148:8080/Environment=USERS_API_ADDRESS=users.kavya.website:8080/g' /etc/systemd/system/login.service
-
-HEAD "Start login service"
-HEAD "Start login service"
+Head "Start login service"
 systemctl daemon-reload && systemctl start login && systemctl status login
 STAT $?
