@@ -24,7 +24,7 @@ go build &>>"${LOG}"
 STAT $?
 
 Head "Create login service file"
-mv /root/todoshell/login/systemd.service /etc/systemd/system/login.service
+mv /root/todoshell/todo/login/systemd.service /etc/systemd/system/login.service
 
 Head "Start login service"
 systemctl daemon-reload && systemctl start login && systemctl status login
