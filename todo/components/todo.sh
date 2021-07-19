@@ -17,7 +17,7 @@ sed -i -e "s/DNSREDIS/redis.kavya.website/" /root/shellscripting/todo/systemd.se
 Stat $?
 
 Head  "Create service file"
-mv /root/shellscripting/todo/systemd.service /etc/systemd/system/todo.service
+mv /root/shellscripting/todo/todo/systemd.service /etc/systemd/system/todo.service
 
 Head "Start Todo Service"
 systemctl daemon-reload && systemctl start todo && systemctl status todo
