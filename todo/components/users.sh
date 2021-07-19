@@ -23,7 +23,7 @@ mvn clean package &>>$LOG
 STAT $?
 
 Head "Create Users Service"
-mv /root/todoshell/users/systemd.service /etc/systemd/system/users.service
+mv /root/todoshell/todo/users/systemd.service /etc/systemd/system/users.service
 STAT $?
 
 Head "Start users service"
