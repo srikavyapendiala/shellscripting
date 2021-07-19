@@ -1,53 +1,33 @@
 #!/bin/bash
 
 source components/common.sh
-
-HEAD "Set hostname & update repo"
-REPEAT
-
-HEAD "Install Nginx"
-apt install nginx -y &>>"${LOG}"
-
-HEAD "Start Nginx"
+OS_PREREQ
+Head "Installing Nginx"
+apt install nginx -y &>>"$LOG"
 systemctl start nginx
-
-HEAD "Install Node & Nginx"
-NPM
 STAT $?
-
-HEAD "switch to html directory"
-cd /var/www/html || exit
+Head "Installing npm"
+apt install npm -y &>>$LOG
 STAT $?
+Head "Downloading git file"
+cd /var/www/html
 
-HEAD "make todo directory and switch"
-mkdir vue && cd vue
+DOWNLOAD_COMPONENT
+Head "Install Npm"
+npm install &>>$LOG && npm audit fix
 STAT $?
-
-HEAD "Clone code from Github"
-GIT_CLONE
+Head "Run build"
+npm run build &>>${LOG}
 STAT $?
-
-HEAD "Install Npm"
-npm install &>>${LOG}
+Head "change path in sites-enabled file"
+sed -i -e 's+/var/www/html+/var/www/html/frontend/dist+g' /etc/nginx/sites-enabled/default
 STAT $?
-
-HEAD "Run build"
-BUILD
-STAT $?
-
-HEAD "Change root path in nginx"
-sed -i -e 's+root /var/www/html+root /var/www/html/vue/frontend/dist+g' /etc/nginx/sites-available/default
-STAT $?
-
-HEAD "Providing Login & Todo DNS names"
-export AUTH_API_ADDRESS=http://login.kavya.website:8080
-export TODOS_API_ADDRESS=http://todo.kavya.website:8080
-
-
-HEAD "Restart Nginx"
+Head "Restart Nginx"
 systemctl restart nginx
 STAT $?
-
-HEAD "run npm start"
-npm start
+Head "Create frontend service file"
+mv /var/www/html/frontend/systemd.service /etc/systemd/system/frontend.service
+STAT $?
+Head "Start the frontend service"
+systemctl daemon-reload && systemctl start frontend && systemctl status frontend
 STAT $?
