@@ -13,7 +13,7 @@ npm install &>>$LOG
 STAT $?
 
 Head "Update Redis IP in service File"
-sed -i -e "s/DNSREDIS/redis.kavya.website/" /root/shellscripting/todo/todo/systemd.service
+sed -i -e "s/DNSREDIS/redis.kavya.website/" /root/shellscripting/todo/systemd.service
 Stat $?
 
 Head  "Create service file"
