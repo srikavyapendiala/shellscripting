@@ -1,29 +1,24 @@
 #!/bin/bash
 
 source components/common.sh
+OS_PREREQ
 
-HEAD "Set hostname and update repo"
-REPEAT
+Head "Installing npm"
+apt install npm -y &>>$LOG
+
+DOWNLOAD_COMPONENT
+
+Head "Install npm"
+npm install &>>$LOG
 STAT $?
 
-HEAD "Install npm"
-NPM
-STAT $?
+Head "Update Redis IP in service File"
+sed -i -e "s/DNSREDIS/redis.zsdevtraining.online/" /root/todoshell/todo/systemd.service
+Stat $?
 
-HEAD "Clone code from github"
-GIT_CLONE
-STAT $?
+Head  "Create service file"
+mv /root/todoshell/todo/systemd.service /etc/systemd/system/todo.service
 
-HEAD "Install npm"
-npm install >>"${LOG}"
-STAT $?
-
-HEAD "Create service file"
-mv /root/shellscripting-todo/todo/todo/systemd.service /etc/systemd/system/todo.service
-
-HEAD "Replace Ip with DNS Names"
-sed -i -e 's/Environment=REDIS_HOST=172.31.25.50/Environment=REDIS_HOST=redis.kavya.website/g' /etc/systemd/system/todo.service
-
-HEAD "Start Todo Service"
+Head "Start Todo Service"
 systemctl daemon-reload && systemctl start todo && systemctl status todo
 STAT $?
