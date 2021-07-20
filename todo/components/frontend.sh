@@ -18,7 +18,7 @@ cd /var/www/html
 DOWNLOAD_COMPONENT
 
 Head "Install Npm"
-npm install &>>$LOG && npm audit fix
+npm install &>>$LOG && npm audit fix &>>$LOG
 STAT $?
 
 Head "Run build"
