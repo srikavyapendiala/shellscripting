@@ -14,8 +14,10 @@ STAT $?
 
 Head "Downloading git file"
 cd /var/www/html
+STAT $?
 
 DOWNLOAD_COMPONENT
+STAT $?
 
 Head "Install Npm"
 npm install &>>$LOG && npm audit fix &>>$LOG
