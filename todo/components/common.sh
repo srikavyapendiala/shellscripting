@@ -1,6 +1,6 @@
 #!/bin/bash
 LOG=/tmp/${COMPONENT}.log
-rm -r ${LOG}
+rm -rf ${LOG}
 Head(){
   echo -e "\e[36m  ============ $1 ===========\e[0m"
   echo -e "\e[36m  ============ $1 ===========\e[0m" >>${LOG}
