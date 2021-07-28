@@ -5,6 +5,7 @@ OS_PREREQ
 
 Head "Installing npm"
 apt install npm -y &>>$LOG
+STAT $?
 
 DOWNLOAD_COMPONENT
 
